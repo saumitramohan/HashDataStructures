@@ -14,9 +14,8 @@ public abstract class HashDataStructureAbstract<K, V> implements HashDataStructu
 			node.value = (V) value;
 		} else {
 			node = new LinkedListNode<K, V>(key, value);
-			array.set(getIndexForKey(key),node);
+			array.set(getIndexForKey(key), node);
 		}
-		
 
 	}
 
@@ -27,7 +26,6 @@ public abstract class HashDataStructureAbstract<K, V> implements HashDataStructu
 	protected LinkedListNode<K, V> getNodeForKey(Object key) {
 		// TODO Auto-generated method stub
 		int index = getIndexForKey(key);
-		System.out.println("Index "+index);
 		LinkedListNode<K, V> node = array.get(index);
 		if (node != null && node.key == key) {
 			return node;
