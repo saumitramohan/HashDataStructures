@@ -9,8 +9,8 @@ public class ChainHashMapTest {
 		map.put(1, "Hello");
 		map.put(2, "World");
 		map.put(3, "*Test*");
-		map.put(4, "Test");
-		System.out.print(map.get(3));
+		map.put(3, "Test");
+		System.out.print( map.get(3));
 
 	}
 }
