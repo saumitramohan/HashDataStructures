@@ -3,12 +3,17 @@ import org.dev.datastructures.LinearHashing;
 
 public class LinearHashMapTest {
 	public static void main (String [] args) {
-		LinearHashing <Integer, String> map = new LinearHashing<>(6);
-		map.put(1, "Hello");
-		map.put(2, "World");
-		map.put(3, "*Test*");
-		map.put(7, "Yolo");
-		System.out.println(map.get(7));
+		LinearHashing <Integer, Integer> map = new LinearHashing<>();
+		
+		for (int i =0; i < 100; i++ ) {
+			map.put(i, i);	
+		}
+		
+
+
+
+
+		System.out.println(map.get(89));
 
 	}
 }

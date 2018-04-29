@@ -86,4 +86,10 @@ public class CuckooHashing<K, V> implements HashDataStructure<K,V> {
 		}
 	}
 
+	@Override
+	public void checkCapacity() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

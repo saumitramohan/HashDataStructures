@@ -15,11 +15,11 @@ public class ChainHashMap<K, V>  extends HashDataStructureAbstract<K, V> {
 		} else {
 			node = new LinkedListNode<K, V>(key, value);
 			int index = getIndexForKey(key);
-			if (array.get(index) != null) {
-				node.next = (LinkedListNode<K, V>) array.get(index);
+			if (array[index] != null) {
+				node.next = (LinkedListNode<K, V>) array[index];
 				node.next.prev = node;
 			}
-			array.set(index, node);
+			array[index] =  node;
 		}
 	}
 
@@ -30,7 +30,7 @@ public class ChainHashMap<K, V>  extends HashDataStructureAbstract<K, V> {
 		if (node.prev != null) {
 			node.prev.next = node.next;
 		} else {
-			array.set(getIndexForKey(key), node.next);
+			array[getIndexForKey(key)] = node.next;
 		}
 		if (node.next != null) {
 			node.next.prev = node.prev;
@@ -40,19 +40,13 @@ public class ChainHashMap<K, V>  extends HashDataStructureAbstract<K, V> {
 
 	public ChainHashMap(int capacity) {
 		// TODO Auto-generated method stub
-		array = new ArrayList<LinkedListNode<K, V>>();
-		System.out.print("Ensure capacity");
-		array.ensureCapacity(capacity);
-		for (int i = 0; i < capacity; i++) {
-			array.add(null);
-		}
-
+		array = new LinkedListNode[capacity];
 	}
 	
 	protected LinkedListNode<K, V> getNodeForKey(Object key) {
 		// TODO Auto-generated method stub
 		int index = getIndexForKey(key);
-		LinkedListNode<K, V> node = array.get(index);
+		LinkedListNode<K, V> node = array[index];
 		while (node != null) {
 			if (node.key == key) {
 				return node;

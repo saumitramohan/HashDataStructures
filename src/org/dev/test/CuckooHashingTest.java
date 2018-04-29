@@ -8,9 +8,9 @@ public class CuckooHashingTest {
 		map.put(1, "Hello");
 		map.put(2, "World");
 		map.put(3, "*Test*");
-		map.put(9, "*Nineth*");
+		map.put(3, "*Nineth*");
 
-		System.out.println(map.get(9));
+		System.out.println(map.get(3));
 
 	}
 }

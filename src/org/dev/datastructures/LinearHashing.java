@@ -10,10 +10,12 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 		// TODO Auto-generated method stub
 		LinkedListNode<K, V> node = getNodeForKey(key);
 		if (node != null && node.key == key) {
+			numberofElements--;
 			node = null;
 		} else {
 			int index = findIndex(getIndexForKey(key), key);
 			if (index != -1) {
+				numberofElements--;
 				node = getNodeForKey(key);
 				node = null;
 			} else {
@@ -22,24 +24,23 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 		}
 	}
 
-	public LinearHashing(int capacity) {
-		array = new ArrayList<>(capacity);
-		array.ensureCapacity(capacity);
-		for (int i = 0; i < capacity; i++) {
-			array.add(null);
-		}
+	public LinearHashing() {
+		array = new LinkedListNode[currentCapcity];
 	}
 
 	public void put(K key, V value) {
 		LinkedListNode<K, V> node = getNodeForKey(key);
+		checkCapacity();
 		if (node == null) {
+			numberofElements++;
 			node = new LinkedListNode<K, V>(key, value);
-			array.set(getIndexForKey(key), node);
+			array[getIndexForKey(key)] = node;
 		} else {
 			int index = findIndexToInsert(getIndexForKey(key));
 			if (index != -1) {
+				numberofElements++;
 				node = new LinkedListNode<K, V>(key, value);
-				array.set(index, node);
+				array[index] = node;
 			} else {
 				throw new ArrayIndexOutOfBoundsException();
 			}
@@ -48,7 +49,7 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 	}
 
 	private int findIndexToInsert(int index) {
-		for (int i = index + 1; i < array.size(); i++) {
+		for (int i = index + 1; i < array.length; i++) {
 			LinkedListNode<K, V> tempNode = getNodeForKey(i);
 			if (tempNode == null) {
 				return i;
@@ -58,7 +59,7 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 	}
 
 	private int findIndex(int index, Object key) {
-		for (int i = index + 1; i < array.size(); i++) {
+		for (int i = index + 1; i < array.length; i++) {
 			LinkedListNode<K, V> tempNode = getNodeForKey(i);
 			if (tempNode != null && tempNode.key == key) {
 				return i;
@@ -81,4 +82,5 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 			}
 		}
 	}
+	
 }
