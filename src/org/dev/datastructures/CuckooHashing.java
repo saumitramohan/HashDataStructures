@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.dev.datastructures.contract.HashDataStructure;
 
-public class CuckooHashing<K, V> implements HashDataStructure {
+public class CuckooHashing<K, V> implements HashDataStructure<K,V> {
 
 	public ArrayList<LinkedListNode<K, V>> arrayOne = null;
 	public ArrayList<LinkedListNode<K, V>> arrayTwo = null;
@@ -45,12 +45,12 @@ public class CuckooHashing<K, V> implements HashDataStructure {
 		return (V) node.value;
 	}
 
-	private LinkedListNode _getFromTableOne(Object key) {
+	private LinkedListNode<K, V> _getFromTableOne(Object key) {
 		int index = retrieveIndexFromTableOne(key);
 		return arrayOne.get(index);
 	}
 
-	private LinkedListNode _getFromTableTwo(Object key) {
+	private LinkedListNode<K, V> _getFromTableTwo(Object key) {
 		return arrayOne.get(retrieveIndexFromTableTwo(key));
 	}
 
