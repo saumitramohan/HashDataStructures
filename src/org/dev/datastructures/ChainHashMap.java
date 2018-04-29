@@ -27,12 +27,12 @@ public class ChainHashMap <K, V> implements HashDataStructure {
 	}
 
 	@Override
-	public Object get(Object key) {
+	public V get(Object key) {
 		if(key == null)
 			return null;
 		else {
 			LinkedListNode<K,V> node = getNodeForKey(key);
-			return node; 
+			return node.value; 
 		}
 	}
 
@@ -52,11 +52,15 @@ public class ChainHashMap <K, V> implements HashDataStructure {
 
 	}
 
-	@Override
-	public void createBucket(int capacity) {
+	public  ChainHashMap(int capacity) {
 		// TODO Auto-generated method stub
-		array = new ArrayList<>();
-		array.ensureCapacity((int) (0.75 * capacity));
+		array = new ArrayList<LinkedListNode<K, V>>();
+		System.out.print("Ensure capacity");
+		array.ensureCapacity(capacity);
+		for (int i =0 ;i < capacity; i++) {
+			array.add(null);
+		}
+
 	}
 
 	private static class LinkedListNode<K, V> {

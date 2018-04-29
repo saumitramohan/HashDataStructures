@@ -8,6 +8,5 @@ public interface HashDataStructure<K, V> {
 
 	public void remove(K key);
 
-	public void createBucket(int capacity);
 	
 }
