@@ -4,46 +4,90 @@ import java.util.ArrayList;
 
 import org.dev.datastructures.contract.HashDataStructure;
 
-public class ChainHashMap<K,V> implements HashDataStructure{
+public class ChainHashMap <K, V> implements HashDataStructure {
+
+	private ArrayList<LinkedListNode<K, V>> array;
 
 	@Override
 	public void put(Object key, Object value) {
 		// TODO Auto-generated method stub
-		
+		LinkedListNode<K, V> node = getNodeForKey(key);
+		if (node!= null) {
+			node.value = (V) value;
+		}
+		else {
+			node = new LinkedListNode<K,V>(key,value);
+			int index = getIndexForKey(key);
+			if (array.get(index) != null) {
+				node.next = array.get(index);
+				node.next.prev = node;
+			}
+			array.set(index, node);
+		}
 	}
 
 	@Override
 	public Object get(Object key) {
-		// TODO Auto-generated method stub
-		return null;
+		if(key == null)
+			return null;
+		else {
+			LinkedListNode<K,V> node = getNodeForKey(key);
+			return node; 
+		}
 	}
 
 	@Override
 	public void remove(Object key) {
 		// TODO Auto-generated method stub
-		
+		LinkedListNode <K,V> node = getNodeForKey(key);
+		if (node.prev != null) {
+				node.prev.next = node.next;
+		}
+		else {
+			array.set(getIndexForKey(key),node.next);
+		}
+		if (node.next != null) {
+			node.next.prev = node.prev;
+		}
+
 	}
-	
+
 	@Override
 	public void createBucket(int capacity) {
 		// TODO Auto-generated method stub
 		array = new ArrayList<>();
 		array.ensureCapacity((int) (0.75 * capacity));
 	}
-	
-	private static class LinkedListNode <K,V>{
-		public LinkedListNode <K,V> next;
-		public LinkedListNode <K,V> prev;
+
+	private static class LinkedListNode<K, V> {
+		public LinkedListNode<K, V> next;
+		public LinkedListNode<K, V> prev;
 		public K key;
 		public V value;
-		public LinkedListNode(K key, V value) {
-			this.key = key;
-			this.value = value;
+
+		public LinkedListNode(Object key, Object value) {
+			this.key = (K) key;
+			this.value = (V) value;
 		}
 	}
-	private ArrayList <LinkedListNode <K,V>> array;
-	
-	
-	
+
+	private int getIndexForKey(Object key) {
+		return (int) Math.abs(key.hashCode() % array.size());
+	}
+
+	private LinkedListNode<K, V> getNodeForKey(Object key) {
+		// TODO Auto-generated method stub
+
+		int index = getIndexForKey(key);
+		LinkedListNode<K, V> node = array.get(index);
+		while (node != null) {
+			if (node.key == key) {
+				return node;
+			} else {
+				node = node.next;
+			}
+		}
+		return node;
+	}
 
 }
