@@ -3,29 +3,40 @@ package org.dev.datastructures;
 import java.util.ArrayList;
 
 import org.dev.datastructures.contract.HashDataStructure;
+import org.dev.datastructures.contract.HashDataStructureAbstract;
 
-public class CuckooHashing<K, V> implements HashDataStructure<K,V> {
+public class CuckooHashing<K, V> extends HashDataStructureAbstract<K,V> implements HashDataStructure<K,V> {
 
-	public ArrayList<LinkedListNode<K, V>> arrayOne = null;
-	public ArrayList<LinkedListNode<K, V>> arrayTwo = null;
+	public LinkedListNode<K, V> arrayOne[] = null;
+	public LinkedListNode<K, V> arrayTwo[] = null;
+	
+	static int counter = 0;
 
 	@Override
 	public void put(Object key, Object value) {
+		
+		numberofElements++;
+		checkCapacity();
 		// TODO Auto-generated method stub
 		if (_getFromTableOne(key) == null) {
 			int index = retrieveIndexFromTableOne(key);
-			arrayOne.set(index, new LinkedListNode<>(key, value));
+			arrayOne[index] = new LinkedListNode<>(key, value);
 		} else if (_getFromTableOne(key) != null && _getFromTableTwo(key) == null) {
 			LinkedListNode tempNode = (LinkedListNode) _getFromTableOne(key);
-			arrayTwo.set(retrieveIndexFromTableTwo(key), tempNode);
-			arrayOne.set(retrieveIndexFromTableOne(key), new LinkedListNode<>(key, value));
+			arrayTwo[retrieveIndexFromTableTwo(key)] = tempNode;
+			arrayOne[retrieveIndexFromTableOne(key)] = new LinkedListNode<>(key, value);
 		} else if (_getFromTableOne(key) != null && _getFromTableTwo(key) != null) {
 			LinkedListNode tempNode = (LinkedListNode<K, V>) _getFromTableOne(key);
-			arrayOne.set(retrieveIndexFromTableOne(key), new LinkedListNode<>(key, value));
+			arrayOne[retrieveIndexFromTableOne(key)] = new LinkedListNode<>(key, value);
 			LinkedListNode tempNode2 = (LinkedListNode) _getFromTableTwo(key);
-			arrayTwo.set(retrieveIndexFromTableTwo(key), new LinkedListNode<>(tempNode.key, tempNode.value));
+			arrayTwo[retrieveIndexFromTableTwo(key)] = new LinkedListNode<>(tempNode.key, tempNode.value);
+			counter ++;
+			if (counter > 4) {
+				System.out.println("***Rehashed due to counter***");
+			}
 			put(tempNode2.key, tempNode2.value);
 		}
+		counter = 0;
 		System.out.println("Successful");
 	}
 
@@ -47,19 +58,21 @@ public class CuckooHashing<K, V> implements HashDataStructure<K,V> {
 
 	private LinkedListNode<K, V> _getFromTableOne(Object key) {
 		int index = retrieveIndexFromTableOne(key);
-		return arrayOne.get(index);
+		return arrayOne[index];
 	}
 
 	private LinkedListNode<K, V> _getFromTableTwo(Object key) {
-		return arrayOne.get(retrieveIndexFromTableTwo(key));
+		return arrayOne[retrieveIndexFromTableTwo(key)];
 	}
 
 	private int retrieveIndexFromTableOne(Object key) {
-		return key.hashCode() % arrayOne.size();
+		System.out.println("HashCode"+key.hashCode());
+		System.out.println("Number : "+ key.hashCode() % arrayOne.length);
+		return (int) Math.abs(key.hashCode() % arrayOne.length);
 	}
 
 	private int retrieveIndexFromTableTwo(Object key) {
-		return ((key.hashCode() / arrayTwo.size()) % arrayTwo.size());
+		return (int) Math.abs(((key.hashCode() / arrayTwo.length) % arrayTwo.length));
 	}
 
 	@Override
@@ -68,28 +81,56 @@ public class CuckooHashing<K, V> implements HashDataStructure<K,V> {
 		if (_get(key) != null) {
 			Object object = _getFromTableOne(key);
 			if (object != null) {
-				arrayOne.set(retrieveIndexFromTableOne(key), null);
+				arrayOne[retrieveIndexFromTableOne(key)] = null;
 			} else {
-				arrayTwo.set(retrieveIndexFromTableTwo(key), null);
+				arrayTwo[retrieveIndexFromTableTwo(key)]=  null;
 			}
 		}
 
 	}
 
-	public CuckooHashing(int capacity) {
-		arrayOne = new ArrayList<>(capacity);
-		arrayTwo = new ArrayList<>(capacity);
-		for (int i = 0; i < capacity; i++) {
-			arrayOne.add(null);
-			arrayTwo.add(null);
+	public CuckooHashing() {
+		arrayOne = new LinkedListNode[currentCapcity];
+		arrayTwo = new LinkedListNode[currentCapcity];
+	}
+	
+	public void rehash() {
+		System.out.println("Rehashed" + currentCapcity);
 
+		LinkedListNode<K, V> tempArray1[] = new LinkedListNode[currentCapcity];
+		LinkedListNode<K, V> tempArray2[] = new LinkedListNode[currentCapcity];
+
+		for (int i = 0; i < currentCapcity; i++) {
+			tempArray1[i] = arrayOne[i];
+			tempArray2[i] = arrayTwo[i];
 		}
-	}
 
-	@Override
-	public void checkCapacity() {
-		// TODO Auto-generated method stub
+		int previousCapacity = currentCapcity;
+		currentCapcity = 2 * currentCapcity;
 		
-	}
+		arrayOne = new LinkedListNode[currentCapcity];
+		arrayTwo = new LinkedListNode[currentCapcity];
+		
+		for (int key = 0; key < previousCapacity; key++) {
+			LinkedListNode<K, V> node = tempArray1[key];
+			if (node != null) {
+				numberofElements--;
+				put(node.key, node.value);
 
+			}
+		}
+		
+		for (int key = 0; key < previousCapacity ; key++) {
+			System.out.println("Current capacity"+ previousCapacity);
+			System.out.println("Array Size"+ tempArray2.length);
+
+			LinkedListNode<K, V> node = tempArray2[key];
+			if (node != null) {
+				numberofElements--;
+				put(node.key, node.value);
+
+			}
+		}
+
+	}
 }

@@ -1,15 +1,16 @@
 package org.dev.datastructures;
 
-import java.util.ArrayList;
 import org.dev.datastructures.contract.HashDataStructureAbstract;
 
-public class ChainHashMap<K, V>  extends HashDataStructureAbstract<K, V> {
-
+public class ChainHashMap<K, V> extends HashDataStructureAbstract<K, V> {
 
 	@Override
 	public void put(Object key, Object value) {
 		// TODO Auto-generated method stub
+		
 		LinkedListNode<K, V> node = getNodeForKey(key);
+		checkCapacity();
+		numberofElements++;
 		if (node != null) {
 			node.value = (V) value;
 		} else {
@@ -19,7 +20,7 @@ public class ChainHashMap<K, V>  extends HashDataStructureAbstract<K, V> {
 				node.next = (LinkedListNode<K, V>) array[index];
 				node.next.prev = node;
 			}
-			array[index] =  node;
+			array[index] = node;
 		}
 	}
 
@@ -38,11 +39,11 @@ public class ChainHashMap<K, V>  extends HashDataStructureAbstract<K, V> {
 
 	}
 
-	public ChainHashMap(int capacity) {
+	public ChainHashMap() {
 		// TODO Auto-generated method stub
-		array = new LinkedListNode[capacity];
+		array = new LinkedListNode[currentCapcity];
 	}
-	
+
 	protected LinkedListNode<K, V> getNodeForKey(Object key) {
 		// TODO Auto-generated method stub
 		int index = getIndexForKey(key);

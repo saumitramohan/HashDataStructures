@@ -10,6 +10,10 @@ public interface HashDataStructure<K, V> {
 
 	public void checkCapacity();
 	
-	public final int  initialCapacity = 4;
+	public final int  initialCapacity = 3;
+	
+	public final double loadFactor = 0.75;
+	
+	public void rehash();
 
 }

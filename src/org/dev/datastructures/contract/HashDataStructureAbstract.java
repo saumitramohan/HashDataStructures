@@ -7,6 +7,8 @@ public abstract class HashDataStructureAbstract<K, V> implements HashDataStructu
 
 	protected static int numberofElements = 0;
 	protected static int currentCapcity = initialCapacity;
+	
+	public int counter = 0;
 
 	public void put(K key, V value) {
 		LinkedListNode<K, V> node = getNodeForKey(key);
@@ -48,16 +50,14 @@ public abstract class HashDataStructureAbstract<K, V> implements HashDataStructu
 	// TODO Auto-generated method stub
 
 	public void checkCapacity() {
-		System.out.println("Current capacity" + 0.75 * currentCapcity);
-		System.out.println("No. of elements" + numberofElements);
-		if (numberofElements >= 0.75 * currentCapcity) {
+		if (numberofElements >= loadFactor * currentCapcity || counter > 8) {
+			System.out.println("Inside check capacity");
 			rehash();
 		}
 	}
 
 	public void rehash() {
-		System.out.println("Inside rehashing");
-		System.out.println("Current capacity" + currentCapcity);
+		System.out.println("Rehashing");
 		LinkedListNode<K, V> tempArray[] = new LinkedListNode[currentCapcity];
 		for (int i = 0; i < currentCapcity; i++) {
 			tempArray[i] = array[i];
