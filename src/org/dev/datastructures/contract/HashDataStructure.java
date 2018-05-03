@@ -10,7 +10,7 @@ public interface HashDataStructure<K, V> {
 
 	public void checkCapacity();
 	
-	public final int  initialCapacity = 3;
+	public final int  initialCapacity = 16;
 	
 	public final double loadFactor = 0.75;
 	

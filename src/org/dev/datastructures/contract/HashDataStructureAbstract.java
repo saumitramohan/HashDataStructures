@@ -1,13 +1,14 @@
 package org.dev.datastructures.contract;
+
 import org.dev.datastructures.LinkedListNode;
 
 public abstract class HashDataStructureAbstract<K, V> implements HashDataStructure<K, V> {
 
-	protected LinkedListNode<K, V> array[];
+	protected LinkedListNode<K, V> hashtable[];
 
 	protected static int numberofElements = 0;
 	protected static int currentCapcity = initialCapacity;
-	
+
 	public int counter = 0;
 
 	public void put(K key, V value) {
@@ -16,23 +17,21 @@ public abstract class HashDataStructureAbstract<K, V> implements HashDataStructu
 			node.value = (V) value;
 		} else {
 			node = new LinkedListNode<K, V>(key, value);
-			array[getIndexForKey(key)] = node;
+			hashtable[getIndexForKey(key)] = node;
 		}
 
 	}
 
 	protected int getIndexForKey(Object key) {
-		return (int) Math.abs(key.hashCode() % array.length);
+		return (int) Math.abs(key.hashCode() % hashtable.length);
 	}
 
 	protected LinkedListNode<K, V> getNodeForKey(Object key) {
 		// TODO Auto-generated method stub
 		int index = getIndexForKey(key);
-		LinkedListNode<K, V> node = array[index];
-		if (node != null && node.key == key) {
-			return node;
-		}
-		return node;
+		System.out.println("Index value:"+index);
+		LinkedListNode<K, V> node = hashtable[index];
+		return node == null ? null : node;
 	}
 
 	@Override
@@ -45,8 +44,6 @@ public abstract class HashDataStructureAbstract<K, V> implements HashDataStructu
 		}
 	}
 
-	@Override
-	public abstract void remove(Object key);
 	// TODO Auto-generated method stub
 
 	public void checkCapacity() {
@@ -57,14 +54,13 @@ public abstract class HashDataStructureAbstract<K, V> implements HashDataStructu
 	}
 
 	public void rehash() {
-		System.out.println("Rehashing");
 		LinkedListNode<K, V> tempArray[] = new LinkedListNode[currentCapcity];
 		for (int i = 0; i < currentCapcity; i++) {
-			tempArray[i] = array[i];
+			tempArray[i] = hashtable[i];
 		}
 
 		currentCapcity = 2 * currentCapcity;
-		array = new LinkedListNode[currentCapcity];
+		hashtable = new LinkedListNode[currentCapcity];
 		for (int key = 0; key < currentCapcity / 2; key++) {
 			LinkedListNode<K, V> node = tempArray[key];
 			if (node != null) {
@@ -74,6 +70,26 @@ public abstract class HashDataStructureAbstract<K, V> implements HashDataStructu
 			}
 		}
 
+	}
+
+	protected int getPrime() {
+		for (int i = currentCapcity - 1; i >= 1; i--) {
+			int fact = 0;
+			for (int j = 2; j <= (int) Math.sqrt(i); j++)
+				if (i % j == 0)
+					fact++;
+			if (fact == 0)
+				return i;
+		}
+		/* Return a prime number */
+		return 3;
+	}
+	
+
+	@Override
+	public  void remove(Object key) {
+		put((K) key, null);		
+		numberofElements--;
 	}
 
 }

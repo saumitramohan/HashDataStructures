@@ -25,7 +25,7 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 	}
 
 	public LinearHashing() {
-		array = new LinkedListNode[currentCapcity];
+		hashtable = new LinkedListNode[currentCapcity];
 	}
 
 	public void put(K key, V value) {
@@ -34,13 +34,13 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 		if (node == null) {
 			numberofElements++;
 			node = new LinkedListNode<K, V>(key, value);
-			array[getIndexForKey(key)] = node;
+			hashtable[getIndexForKey(key)] = node;
 		} else {
 			int index = findIndexToInsert(getIndexForKey(key));
 			if (index != -1) {
 				numberofElements++;
 				node = new LinkedListNode<K, V>(key, value);
-				array[index] = node;
+				hashtable[index] = node;
 			} else {
 				throw new ArrayIndexOutOfBoundsException();
 			}
@@ -49,7 +49,7 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 	}
 
 	private int findIndexToInsert(int index) {
-		for (int i = index + 1; i < array.length; i++) {
+		for (int i = index + 1; i < hashtable.length; i++) {
 			LinkedListNode<K, V> tempNode = getNodeForKey(i);
 			if (tempNode == null) {
 				return i;
@@ -59,7 +59,7 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 	}
 
 	private int findIndex(int index, Object key) {
-		for (int i = index + 1; i < array.length; i++) {
+		for (int i = index + 1; i < hashtable.length; i++) {
 			LinkedListNode<K, V> tempNode = getNodeForKey(i);
 			if (tempNode != null && tempNode.key == key) {
 				return i;
