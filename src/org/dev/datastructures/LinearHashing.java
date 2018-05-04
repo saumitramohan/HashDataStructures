@@ -1,6 +1,4 @@
 package org.dev.datastructures;
-
-import java.util.ArrayList;
 import org.dev.datastructures.contract.HashDataStructureAbstract;
 
 public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
@@ -9,7 +7,7 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 	public void remove(Object key) {
 		// TODO Auto-generated method stub
 		LinkedListNode<K, V> node = getNodeForKey(key);
-		if (node != null && node.key == key) {
+		if (node != null && node.key.equals(key)) {
 			numberofElements--;
 			node = null;
 		} else {
@@ -18,9 +16,7 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 				numberofElements--;
 				node = getNodeForKey(key);
 				node = null;
-			} else {
-				throw new ArrayIndexOutOfBoundsException();
-			}
+			} 
 		}
 	}
 
@@ -30,7 +26,7 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 
 	public void put(K key, V value) {
 		LinkedListNode<K, V> node = getNodeForKey(key);
-		checkCapacity();
+		//checkCapacity();
 		if (node == null) {
 			numberofElements++;
 			node = new LinkedListNode<K, V>(key, value);
@@ -41,17 +37,17 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 				numberofElements++;
 				node = new LinkedListNode<K, V>(key, value);
 				hashtable[index] = node;
-			} else {
-				throw new ArrayIndexOutOfBoundsException();
-			}
-
+			} 
 		}
 	}
 
 	private int findIndexToInsert(int index) {
 		for (int i = index + 1; i < hashtable.length; i++) {
+			
 			LinkedListNode<K, V> tempNode = getNodeForKey(i);
+			
 			if (tempNode == null) {
+				collions = i-index;
 				return i;
 			}
 		}
@@ -61,7 +57,7 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 	private int findIndex(int index, Object key) {
 		for (int i = index + 1; i < hashtable.length; i++) {
 			LinkedListNode<K, V> tempNode = getNodeForKey(i);
-			if (tempNode != null && tempNode.key == key) {
+			if (tempNode != null && tempNode.key.equals(key)) {
 				return i;
 			}
 		}
@@ -73,14 +69,22 @@ public class LinearHashing<K, V> extends HashDataStructureAbstract<K, V> {
 			return null;
 		else {
 			LinkedListNode<K, V> node = getNodeForKey(key);
-			if (node != null && node.key == key) {
+			if (node != null && node.key.equals(key)) {
 				return node.value;
 			} else {
+				 
 				int index = findIndex(getIndexForKey(key), key);
 				LinkedListNode<K, V> tempNode = getNodeForKey(index);
 				return tempNode.value;
 			}
 		}
+	}
+	
+	public int getCollions() {
+		return collions;
+	}
+	public void setCollions() {
+		 collions = 0;
 	}
 	
 }

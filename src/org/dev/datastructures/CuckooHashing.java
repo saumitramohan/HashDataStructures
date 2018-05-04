@@ -5,22 +5,22 @@ import java.util.ArrayList;
 import org.dev.datastructures.contract.HashDataStructure;
 import org.dev.datastructures.contract.HashDataStructureAbstract;
 
-public class CuckooHashing<K, V> extends HashDataStructureAbstract<K,V> implements HashDataStructure<K,V> {
+public class CuckooHashing<K, V> extends HashDataStructureAbstract<K, V> implements HashDataStructure<K, V> {
 
 	public LinkedListNode<K, V> arrayOne[] = null;
 	public LinkedListNode<K, V> arrayTwo[] = null;
-	
-	static int counter = 0;
 
 	@Override
 	public void put(Object key, Object value) {
-		
+
 		numberofElements++;
+		// System.out.println("Counter value :: " + counter);
 		checkCapacity();
 		// TODO Auto-generated method stub
 		if (_getFromTableOne(key) == null) {
 			int index = retrieveIndexFromTableOne(key);
 			arrayOne[index] = new LinkedListNode<>(key, value);
+
 		} else if (_getFromTableOne(key) != null && _getFromTableTwo(key) == null) {
 			LinkedListNode tempNode = (LinkedListNode) _getFromTableOne(key);
 			arrayTwo[retrieveIndexFromTableTwo(key)] = tempNode;
@@ -30,14 +30,10 @@ public class CuckooHashing<K, V> extends HashDataStructureAbstract<K,V> implemen
 			arrayOne[retrieveIndexFromTableOne(key)] = new LinkedListNode<>(key, value);
 			LinkedListNode tempNode2 = (LinkedListNode) _getFromTableTwo(key);
 			arrayTwo[retrieveIndexFromTableTwo(key)] = new LinkedListNode<>(tempNode.key, tempNode.value);
-			counter ++;
-			if (counter > 4) {
-				System.out.println("***Rehashed due to counter***");
-			}
+			counter++;
 			put(tempNode2.key, tempNode2.value);
 		}
-		counter = 0;
-		System.out.println("Successful");
+		// counter = 0;
 	}
 
 	@Override
@@ -66,8 +62,8 @@ public class CuckooHashing<K, V> extends HashDataStructureAbstract<K,V> implemen
 	}
 
 	private int retrieveIndexFromTableOne(Object key) {
-		System.out.println("HashCode"+key.hashCode());
-		System.out.println("Number : "+ key.hashCode() % arrayOne.length);
+		// System.out.println("HashCode"+key.hashCode());
+		// System.out.println("Number : "+ key.hashCode() % arrayOne.length);
 		return (int) Math.abs(key.hashCode() % arrayOne.length);
 	}
 
@@ -78,12 +74,12 @@ public class CuckooHashing<K, V> extends HashDataStructureAbstract<K,V> implemen
 	@Override
 	public void remove(Object key) {
 		// TODO Auto-generated method stub
-		if (_get(key) != null) {
+		if (key != null) {
 			Object object = _getFromTableOne(key);
 			if (object != null) {
 				arrayOne[retrieveIndexFromTableOne(key)] = null;
 			} else {
-				arrayTwo[retrieveIndexFromTableTwo(key)]=  null;
+				arrayTwo[retrieveIndexFromTableTwo(key)] = null;
 			}
 		}
 
@@ -93,9 +89,9 @@ public class CuckooHashing<K, V> extends HashDataStructureAbstract<K,V> implemen
 		arrayOne = new LinkedListNode[currentCapcity];
 		arrayTwo = new LinkedListNode[currentCapcity];
 	}
-	
+
 	public void rehash() {
-		System.out.println("Rehashed" + currentCapcity);
+		// System.out.println("Rehashed" + currentCapcity);
 
 		LinkedListNode<K, V> tempArray1[] = new LinkedListNode[currentCapcity];
 		LinkedListNode<K, V> tempArray2[] = new LinkedListNode[currentCapcity];
@@ -107,10 +103,10 @@ public class CuckooHashing<K, V> extends HashDataStructureAbstract<K,V> implemen
 
 		int previousCapacity = currentCapcity;
 		currentCapcity = 2 * currentCapcity;
-		
+
 		arrayOne = new LinkedListNode[currentCapcity];
 		arrayTwo = new LinkedListNode[currentCapcity];
-		
+
 		for (int key = 0; key < previousCapacity; key++) {
 			LinkedListNode<K, V> node = tempArray1[key];
 			if (node != null) {
@@ -119,11 +115,8 @@ public class CuckooHashing<K, V> extends HashDataStructureAbstract<K,V> implemen
 
 			}
 		}
-		
-		for (int key = 0; key < previousCapacity ; key++) {
-			System.out.println("Current capacity"+ previousCapacity);
-			System.out.println("Array Size"+ tempArray2.length);
 
+		for (int key = 0; key < previousCapacity; key++) {
 			LinkedListNode<K, V> node = tempArray2[key];
 			if (node != null) {
 				numberofElements--;

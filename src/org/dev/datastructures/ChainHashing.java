@@ -9,7 +9,7 @@ public class ChainHashing<K, V> extends HashDataStructureAbstract<K, V> {
 		// TODO Auto-generated method stub
 
 		LinkedListNode<K, V> node = getNodeForKey(key);
-		// checkCapacity();
+		checkCapacity();
 		numberofElements++;
 		if (node != null) {
 			node.value = (V) value;
@@ -30,6 +30,8 @@ public class ChainHashing<K, V> extends HashDataStructureAbstract<K, V> {
 	public void remove(Object key) {
 		// TODO Auto-generated method stub
 		LinkedListNode<K, V> node = getNodeForKey(key);
+		if (node == null)
+			return;
 		if (node.prev != null) {
 			node.prev.next = node.next;
 		} else {

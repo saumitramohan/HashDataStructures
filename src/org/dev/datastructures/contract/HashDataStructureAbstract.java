@@ -8,11 +8,13 @@ public abstract class HashDataStructureAbstract<K, V> implements HashDataStructu
 
 	protected static int numberofElements = 0;
 	protected static int currentCapcity = initialCapacity;
+	protected  static int collions = 0;
 
-	public int counter = 0;
+	public static int counter = 0;
 
 	public void put(K key, V value) {
 		LinkedListNode<K, V> node = getNodeForKey(key);
+		checkCapacity();
 		if (node != null) {
 			node.value = (V) value;
 		} else {
@@ -29,7 +31,6 @@ public abstract class HashDataStructureAbstract<K, V> implements HashDataStructu
 	protected LinkedListNode<K, V> getNodeForKey(Object key) {
 		// TODO Auto-generated method stub
 		int index = getIndexForKey(key);
-		System.out.println("Index value:"+index);
 		LinkedListNode<K, V> node = hashtable[index];
 		return node == null ? null : node;
 	}
@@ -47,9 +48,9 @@ public abstract class HashDataStructureAbstract<K, V> implements HashDataStructu
 	// TODO Auto-generated method stub
 
 	public void checkCapacity() {
-		if (numberofElements >= loadFactor * currentCapcity || counter > 8) {
-			System.out.println("Inside check capacity");
+		if (numberofElements >= loadFactor * currentCapcity || counter > 10) {
 			rehash();
+			counter = 0;
 		}
 	}
 
@@ -58,10 +59,13 @@ public abstract class HashDataStructureAbstract<K, V> implements HashDataStructu
 		for (int i = 0; i < currentCapcity; i++) {
 			tempArray[i] = hashtable[i];
 		}
+		
+		int previousCapacity = currentCapcity;
+
 
 		currentCapcity = 2 * currentCapcity;
 		hashtable = new LinkedListNode[currentCapcity];
-		for (int key = 0; key < currentCapcity / 2; key++) {
+		for (int key = 0; key < previousCapacity; key++) {
 			LinkedListNode<K, V> node = tempArray[key];
 			if (node != null) {
 				numberofElements--;
